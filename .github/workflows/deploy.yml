@@ -2,7 +2,7 @@
 # - REGISTRY_HOST
 # - REGISTRY_USERNAME
 # - REGISTRY_PASSWORD
-# - DOKPLOY_DEPLOY_WEBHOOK
+# - KOMODO_DEPLOY_WEBHOOK
 name: Build, push, and deploy
 
 on:
@@ -52,14 +52,21 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    name: Trigger Dokploy redeploy
+    name: Trigger Komodo redeploy
     needs: build-and-push
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Tell Dokploy to pull the new image and redeploy
+      # No SSH key needed: Komodo already has its own credentials to the
+      # registry (set up once on its side), so a single authenticated ping
+      # is enough to make it pull the tag just pushed above and recreate
+      # the container.
+      #
+      # Unlike Dokploy's webhook, this one doesn't need a push-shaped JSON
+      # body. The URL already encodes which Stack and which action
+      # (.../stack/<id>/deploy), so Komodo checks the
+      # X-Komodo-Webhook-Secret header and deploys that Stack.
+      - name: Tell Komodo to redeploy
         run: |
-          curl -fsS -X POST "${{ vars.DOKPLOY_DEPLOY_WEBHOOK }}" \
-            -H "Content-Type: application/json" \
-            -H "X-GitHub-Event: push" \
-            -d '{"ref":"${{ github.ref }}","repository":{"full_name":"${{ github.repository }}"}}'
+          curl -fsS -X POST "${{ vars.KOMODO_DEPLOY_WEBHOOK }}" \
+            -H "X-Komodo-Webhook-Secret: deploy"
