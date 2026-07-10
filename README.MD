@@ -83,6 +83,7 @@ Go to **Settings → Secrets and variables → Actions → Variables** and add:
 ### Manual Deploy
 
 ```bash
+export IMAGE=${REGISTRY_HOST}/alexandr-counter-app
 docker pull ${REGISTRY_HOST}/alexandr-counter-app:latest
 docker compose -f docker-compose.prod.yml up -d
 ```
