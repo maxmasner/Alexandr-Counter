@@ -1,12 +1,1 @@
-services:
-  php:
-    ports:
-      - "8000:80"
-    environment:
-      - APP_ENV=development
-      - APP_DEBUG=true
-
-networks:
-  default:
-    name: alexandr-counter-dev
-    external: false
+# Obsolete — replaced by docker-compose.build.yml.

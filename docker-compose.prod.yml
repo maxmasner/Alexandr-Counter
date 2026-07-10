@@ -1,13 +1,18 @@
 services:
-  php:
+  app:
+    image: ${IMAGE:-alexandr-counter-app}:${IMAGE_TAG:-latest}
+    container_name: ${SERVICE_NAME:-alexandr-counter-app}
+    restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      - APP_ENV=production
-      - APP_DEBUG=false
-    deploy:
-      resources:
-        limits:
-          cpus: "0.25"
-          memory: 256M
-        reservations:
-          cpus: "0.1"
-          memory: 64M
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      COUNTER_FILE: ${COUNTER_FILE:-/data/counter.json}
+    volumes:
+      - ${DATA_PATH:-./data}:/data
+
+networks:
+  default:
+    external: true
+    name: ${NETWORK_NAME:-proxy}

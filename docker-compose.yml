@@ -1,20 +1,5 @@
-version: '3.9'
-
-services:
-    php:
-        container_name: 'alexandr_counter_php'
-        image: php:alpine
-        networks: [default]
-        restart: always
-        volumes:
-            - ./src:/var/www
-        expose: [ 80 ]
-        command: "php -S 0.0.0.0:80 -t /var/www"
-        environment:
-            - APP_ENV=${APP_ENV:-production}
-            - APP_DEBUG=${APP_DEBUG:-false}
-
-networks:
-    default:
-        external: true
-        name: proxy
+# Obsolete — safe to delete this file.
+#
+# Use:
+#   docker-compose.prod.yml         (server / Dokploy)
+#   docker-compose.prod.yml + docker-compose.build.yml (local source builds)
