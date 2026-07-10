@@ -1,7 +1,12 @@
-<?php 
+<?php
 
-$content =file_get_contents('./counter.json');
-$file = fopen('./counter.json', 'w+');
+require_once __DIR__ . '/counter_store.php';
+
+$counterFile = counterFilePath();
+ensureCounterStorage($counterFile);
+
+$content = file_get_contents($counterFile);
+$file = fopen($counterFile, 'w+');
 if(empty($content)) {
 	$content = [
 		'views' => 0,

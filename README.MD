@@ -18,26 +18,9 @@ Superb, Phenomenal, Amazing, Outstanding, Terrific, Wonderful, Awesome and Perfe
 
 ## Use
 ### Config
-If you do not use any proxy or reverse proxy services, you need to define/add ports into docker-compose.yml file.
-```yaml
-    php:
-        ## .... ##
-        ports: ["8000:8000"]
-        ## .... ##
-```
-
-### Run
+Copy `.env.example` to `.env` and adjust values:
 ```bash
-docker-compose up
-```
-or detached mode
-```bash
-docker-compose up -d
-```
-
-### Stop
-```bash
-docker-compose down
+cp .env.example .env
 ```
 
 ### URL
@@ -52,9 +35,9 @@ http://localhost:8000/counter.php
 
 ## Development
 
-Start development environment (port 8000, bridge network, hot-reload):
+Start local environment (build image from source, expose port from `HOST_PORT`):
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.prod.yml -f docker-compose.build.yml up --build -d
 ```
 
 Stop:
@@ -70,12 +53,10 @@ docker compose down
 
 ## Production
 
-Start production environment (external proxy, resource limits):
+Start production environment (image-only compose, external reverse-proxy network):
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml up -d
 ```
-
-Resource limits: **256MB RAM**, **0.25 CPU** cores.
 
 Stop:
 ```bash
@@ -86,26 +67,25 @@ docker compose down
 
 ## CI/CD
 
-Push to `main` → GitHub Actions validates compose files → deploys to server automatically via SSH.
+Push to `main` → GitHub Actions validates compose + Dockerfile, builds/pushes image to registry, then triggers Dokploy redeploy webhook.
 
-### Required GitHub Secrets
+### Required GitHub Variables
 
-Go to **Settings → Secrets and variables → Actions** and add:
+Go to **Settings → Secrets and variables → Actions → Variables** and add:
 
-| Secret | Description |
+| Variable | Description |
 |--------|-------------|
-| `SERVER_HOST` | Server IP or domain |
-| `SERVER_USER` | SSH username |
-| `SSH_KEY` | Private SSH key content |
-| `PROJECT_PATH` | Absolute path to project on server |
+| `REGISTRY_HOST` | Container registry host |
+| `REGISTRY_USERNAME` | Registry user |
+| `REGISTRY_PASSWORD` | Registry password/token |
+| `DOKPLOY_DEPLOY_WEBHOOK` | Dokploy deploy webhook URL |
 
 ### Manual Deploy
 
 ```bash
-# On the server
-cd $PROJECT_PATH
-git pull origin main
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+export IMAGE=${REGISTRY_HOST}/alexandr-counter-app
+docker pull ${REGISTRY_HOST}/alexandr-counter-app:latest
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 ---

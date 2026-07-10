@@ -22,15 +22,19 @@
         <div class="container-fluid">
             <main role="main" class="inner cover">
                 <?php
+                require_once __DIR__ . '/counter_store.php';
+                $counterFile = counterFilePath();
+                ensureCounterStorage($counterFile);
+
                 if (!empty($_GET['erase'])) {
-                    $file = fopen('./counter.json', 'w');
+                    $file = fopen($counterFile, 'w');
                     fclose($file);
                     header("Location: /");
                         die();
 
                 }
 
-                $content = file_get_contents('./counter.json');
+                $content = file_get_contents($counterFile);
                 if (empty($content)) {
                     die('No information;');
                 }
