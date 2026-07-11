@@ -62,3 +62,4 @@ jobs:
         with:
           webhook-url: ${{ vars.KOMODO_DEPLOY_WEBHOOK }}
           webhook-secret: 'deploy'
+
