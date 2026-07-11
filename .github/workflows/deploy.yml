@@ -52,14 +52,13 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    name: Trigger Dokploy redeploy
+    name: Trigger Komodo redeploy
     needs: build-and-push
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Tell Dokploy to pull the new image and redeploy
-        run: |
-          curl -fsS -X POST "${{ vars.DOKPLOY_DEPLOY_WEBHOOK }}" \
-            -H "Content-Type: application/json" \
-            -H "X-GitHub-Event: push" \
-            -d '{"ref":"${{ github.ref }}","repository":{"full_name":"${{ github.repository }}"}}'
+      - name: Tell Komodo to redeploy
+        uses: maxmasner/komodo-deploy-action@v1
+        with:
+          webhook-url: ${{ vars.KOMODO_DEPLOY_WEBHOOK }}
+          webhook-secret: 'deploy'
