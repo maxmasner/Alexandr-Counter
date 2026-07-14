@@ -67,7 +67,7 @@ docker compose down
 
 ## CI/CD
 
-Push to `main` → GitHub Actions validates compose + Dockerfile, builds/pushes image to registry, then triggers Dokploy redeploy webhook.
+Push to `main` → GitHub Actions validates compose + Dockerfile, builds/pushes image to registry, then triggers Komodo redeploy webhook.
 
 ### Required GitHub Variables
 
@@ -78,7 +78,7 @@ Go to **Settings → Secrets and variables → Actions → Variables** and add:
 | `REGISTRY_HOST` | Container registry host |
 | `REGISTRY_USERNAME` | Registry user |
 | `REGISTRY_PASSWORD` | Registry password/token |
-| `DOKPLOY_DEPLOY_WEBHOOK` | Dokploy deploy webhook URL |
+| `KOMODO_DEPLOY_WEBHOOK` | Komodo deploy webhook URL |
 
 ### Manual Deploy
 

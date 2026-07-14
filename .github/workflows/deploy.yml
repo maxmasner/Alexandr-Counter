@@ -2,7 +2,7 @@
 # - REGISTRY_HOST
 # - REGISTRY_USERNAME
 # - REGISTRY_PASSWORD
-# - DOKPLOY_DEPLOY_WEBHOOK
+# - KOMODO_DEPLOY_WEBHOOK
 name: Build, push, and deploy
 
 on:
@@ -58,7 +58,7 @@ jobs:
     environment: production
     steps:
       - name: Tell Komodo to redeploy
-        uses: maxmasner/komodo-deploy-action@v1
+        uses: maxmasner/komodo-deploy-action@ef425d1de64f45026408fdf1612f1065fec80540
         with:
           webhook-url: ${{ vars.KOMODO_DEPLOY_WEBHOOK }}
           webhook-secret: 'deploy'
